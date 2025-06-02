@@ -1,12 +1,8 @@
-### Developed By : R Guruprasad
-### Reg. NO . 212222240033
-### Date: 
 
 # Ex.No: 05  IMPLEMENTATION OF TIME SERIES ANALYSIS AND DECOMPOSITION
 
 ### AIM:
-To Illustrates how to perform time series analysis and decomposition on the India's GDP and Change in Annual Percentage Change.
-
+To Illustrates how to perform time series analysis and decomposition on the goodreadsbooks dataset
 ### ALGORITHM:
 1. Import the required packages like pandas and numpy
 2. Read the data using the pandas
@@ -15,86 +11,83 @@ To Illustrates how to perform time series analysis and decomposition on the Indi
 5. Display the overall results.
 
 ### PROGRAM:
+### Developed by: R Guruprasad
+### Register no:212222240033
 ```python
-
-# Importing the required libraries
 import pandas as pd
-from statsmodels.tsa.seasonal import seasonal_decompose
+import numpy as np
 import matplotlib.pyplot as plt
+from statsmodels.tsa.seasonal import seasonal_decompose
 
-# Load the dataset
-  # Replace with the correct path to your file
-df = pd.read_csv('india-gdp.csv')
+data = pd.read_csv('goodreads_books.csv', nrows=50)
 
-# Display the first 5 rows of the dataset
-print("First 5 Rows of the dataset:")
-print(df.head())
+data['publication_date'] = pd.to_datetime(data['publication_date']) 
 
-# Converting the 'date' column to datetime and setting it as the index
-df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d')
-df.set_index('date', inplace=True)
+monthly_data = data.resample('M', on='publication_date')['ratings_count'].sum().reset_index()
 
-# Filling missing values for the "tank" column (if any) using forward fill
-df['AnnualChange'] = df['AnnualChange'].fillna(method='ffill')
+monthly_data.set_index('publication_date', inplace=True)
 
-# Performing seasonal decomposition on the "tank" feature (additive model)
-decomposition = seasonal_decompose(df['AnnualChange'], model='additive', period=7)
+decomposition = seasonal_decompose(monthly_data, model='additive')
 
-# Plot and save each component separately with different colors
+# Step 5: Plot the data
+plt.figure(figsize=(10, 30))  # Change this to a square shape
 
-# Plot and save the observed (original) data
-plt.figure(figsize=(10, 4))
-decomposition.observed.plot(color='blue')
-plt.title('Observed')
-plt.ylabel('Observed')
-plt.savefig('observed_plot.png')
-plt.show()
+# Original Data
+plt.subplot(411)
+plt.plot(monthly_data, label='Monthly Ratings Count')
+plt.legend(loc='upper left')
+plt.title('Monthly Ratings Count')
 
-# Plot and save the trend component
-plt.figure(figsize=(10, 4))
-decomposition.trend.plot(color='green')
-plt.title('Trend')
-plt.ylabel('Trend')
-plt.savefig('trend_plot.png')
-plt.show()
+# Trend Plot
+plt.subplot(412)
+plt.plot(decomposition.trend, label='Trend', color='orange')
+plt.legend(loc='upper left')
+plt.title('Trend Plot')
 
-# Plot and save the seasonal component
-plt.figure(figsize=(10, 4))
-decomposition.seasonal.plot(color='red')
-plt.title('Seasonal')
-plt.ylabel('Seasonal')
-plt.savefig('seasonal_plot.png')
-plt.show()
+# Seasonal Plot
+plt.subplot(413)
+plt.plot(decomposition.seasonal, label='Seasonal', color='green')
+plt.legend(loc='upper left')
+plt.title('Seasonal Plot')
 
-# Plot and save the residual component
-plt.figure(figsize=(10, 4))
-decomposition.resid.plot(color='purple')
-plt.title('Residual')
-plt.ylabel('Residual')
-plt.savefig('residual_plot.png')
+# Residual Plot
+plt.subplot(414)
+plt.plot(decomposition.resid, label='Residual', color='red')
+plt.legend(loc='upper left')
+plt.title('Residual Plot')
+
+plt.tight_layout()
 plt.show()
 
 ```
+
 ### OUTPUT:
+
 FIRST FIVE ROWS:
 
-![Screenshot 2024-09-23 104448](https://github.com/user-attachments/assets/b92cf3dd-86b0-450b-a800-22d366ff9e15)
+![{FCADBF60-E218-4149-A32F-5B5C5B9BF498}](https://github.com/user-attachments/assets/402a1487-8cab-4dc2-b026-d7c55a4f22fd)
 
-SEASONAL PLOT REPRESENTATION :
-
-![Screenshot 2024-09-23 104531](https://github.com/user-attachments/assets/369876a5-39a1-414c-aa0c-6e566e272bb8)
-
-TREND PLOT REPRESENTATION :
-
-![Screenshot 2024-09-23 104516](https://github.com/user-attachments/assets/f2c908f1-64a2-4598-b6b5-5fd187bdb3e1)
 
 PLOTTING THE DATA:
 
-![Screenshot 2024-09-23 104547](https://github.com/user-attachments/assets/6330f7e0-125e-4d67-a0a4-decf2991f953)
+![{76B5D7CA-015E-4613-BE06-89F31DDFFC77}](https://github.com/user-attachments/assets/c10ecbe7-95ec-4fb4-b7d1-8ea6f8a6de70)
+
+
+SEASONAL PLOT REPRESENTATION :
+
+![{A3F0FBD4-F8D8-4EA9-8860-945AA7272840}](https://github.com/user-attachments/assets/bfed3db5-bd30-4ad8-970a-d9928282150d)
+
+
+TREND PLOT REPRESENTATION :
+
+![{19693FB6-28F2-473D-B106-801B98640574}](https://github.com/user-attachments/assets/199b43a0-b38f-4077-a7b9-1280b66b91a2)
+
 
 OVERAL REPRESENTATION:
 
-![Screenshot 2024-09-23 104506](https://github.com/user-attachments/assets/22088370-0263-496a-b9c1-39a3b93f6a05)
+![{00D6F852-0B44-4D0B-A521-16CDB2488007}](https://github.com/user-attachments/assets/93b373da-a3b1-4505-8e42-95d03f446cff)
+
+
 
 ### RESULT:
-Thus we have created the python code for the time series analysis and decomposition.
+Thus, the python code for the time series analysis and decomposition is successfully implemented.
